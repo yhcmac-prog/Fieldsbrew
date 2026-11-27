@@ -12,6 +12,17 @@ pub struct BrewInstall {
     pub current: String,
 }
 
+impl From<BrewInstall> for String {
+    fn from(b: BrewInstall) -> String {
+        format!("{} ({})", b.name, b.current)
+    }
+}
+impl From<&BrewInstall> for String {
+    fn from(b: &BrewInstall) -> String {
+        format!("{} ({})", b.name, b.current)
+    }
+}
+
 /// 探测 Homebrew 前缀（只读，不修改任何 Homebrew 文件）。
 /// 优先 $HOMEBREW_PREFIX，其次 Intel 默认 /usr/local、Apple Silicon 默认 /opt/homebrew。
 pub fn prefix() -> Option<PathBuf> {

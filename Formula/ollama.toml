@@ -1,0 +1,15 @@
+[package]
+name = "ollama"
+version = "0.40.16"
+description = "Ollama — 本地运行大型语言模型"
+homepage = "https://ollama.com/"
+
+[source]
+url = "https://github.com/ollama/ollama/archive/refs/tags/v0.40.16.tar.gz"
+sha256 = "296dc8dd88a617335d9132412179f11926d266941d53a4727917fd18ac675053"
+
+[build]
+system = "make"
+
+[install]
+keg_only = true

@@ -1,4 +1,5 @@
 pub mod audit;
+pub mod bottle;
 pub mod cask;
 pub mod cleanup;
 pub mod convert;

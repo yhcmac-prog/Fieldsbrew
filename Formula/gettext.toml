@@ -1,0 +1,15 @@
+[package]
+name = "gettext"
+version = "0.23"
+description = "GNU gettext — i18n/l10n 工具链"
+homepage = "https://www.gnu.org/software/gettext/"
+
+[source]
+url = "https://ftp.gnu.org/gnu/gettext/gettext-0.23.tar.xz"
+sha256 = "bf31a9b6bdf3e364669c7bd9858f97e4a0c408a8d22940c5d4ab638b65460f85"
+
+[build]
+system = "autotools"
+
+[install]
+keg_only = true

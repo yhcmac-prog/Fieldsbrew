@@ -1,0 +1,15 @@
+[package]
+name = "wine-staging"
+version = "9.20"
+description = "Wine staging — 开发版 + 额外 patch"
+homepage = "https://www.winehq.org/"
+
+[source]
+url = "https://dl.winehq.org/wine/source/9.x/wine-9.20.tar.xz"
+sha256 = "95f2b45b1458125be7d9fccc94ca5f8cce0a5e4ae11d0d193cfb7dddb35e7a86"
+
+[build]
+system = "autotools"
+
+[install]
+keg_only = false

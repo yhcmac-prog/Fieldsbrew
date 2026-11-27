@@ -7,8 +7,7 @@ dependencies = []
 
 [source]
 url = "https://zlib.net/fossils/zlib-1.3.1.tar.gz"
-# TODO: 待网络条件允许后回填官方 sha256；留空则跳过校验（会输出警告）
-sha256 = ""
+sha256 = "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23"
 
 [build]
 system = "autotools"

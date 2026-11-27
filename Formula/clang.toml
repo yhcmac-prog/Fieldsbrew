@@ -1,0 +1,16 @@
+[package]
+name = "clang"
+version = "23.1.6"
+description = "LLVM Clang C/C++/ObjC 编译器"
+homepage = "https://clang.llvm.org/"
+dependencies = ["libffi", "zlib"]
+
+[source]
+url = "https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-23.1.6.tar.gz"
+sha256 = "d29b49bc4c6ed50c6515895d4758fc81aa273c3e4c6ea7b13b68170b667edd60"
+
+[build]
+system = "cmake"
+
+[install]
+keg_only = true

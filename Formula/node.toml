@@ -1,0 +1,15 @@
+[package]
+name = "node"
+version = "26.13.1"
+description = "Node.js JavaScript 运行时（LTS）"
+homepage = "https://nodejs.org/"
+
+[source]
+url = "https://nodejs.org/dist/v26.13.1/node-v26.13.1.tar.xz"
+sha256 = "a7f6204ff63b6a2cd274d48903285abb86ed53a99070e532d4c2fd787457d9e6"
+
+[build]
+system = "make"
+
+[install]
+keg_only = false

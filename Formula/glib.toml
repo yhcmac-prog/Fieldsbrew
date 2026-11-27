@@ -1,0 +1,16 @@
+[package]
+name = "glib"
+version = "2.90.1"
+description = "GNOME GLib 核心工具库"
+homepage = "https://wiki.gnome.org/Projects/GLib"
+dependencies = ["gettext", "libffi", "pcre2"]
+
+[source]
+url = "https://download.gnome.org/sources/glib/2.90/glib-2.90.1.tar.xz"
+sha256 = "93c941aa17d5eb1d53fe838365f29a8b4e539c222a256d974ec8f30fc413e396"
+
+[build]
+system = "cmake"
+
+[install]
+keg_only = false

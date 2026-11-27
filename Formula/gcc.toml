@@ -1,0 +1,16 @@
+[package]
+name = "gcc"
+version = "16.2.0"
+description = "GNU Compiler Collection（C/C++/Fortran/Go/ObjC）"
+homepage = "https://gcc.gnu.org/"
+dependencies = ["gmp", "mpfr", "mpc", "isl", "zlib"]
+
+[source]
+url = "https://ftp.gnu.org/gnu/gcc/gcc-16.2.0/gcc-16.2.0.tar.xz"
+sha256 = "63835ece39756d5fe899c522def5ca0724be7f3dd01f0b8e127a92a871c7d56b"
+
+[build]
+system = "autotools"
+
+[install]
+keg_only = true

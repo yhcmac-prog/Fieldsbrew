@@ -1,0 +1,15 @@
+[package]
+name = "slirp"
+version = "4.8.0"
+description = "slirp — 用户态 TCP/IP 网络栈（QEMU 网络后端）"
+homepage = "https://slirp.rs/"
+
+[source]
+url = "https://gitlab.freedesktop.org/slirp/slirp/-/archive/v4.8.0/slirp-v4.8.0.tar.gz"
+sha256 = "794378376259c6046bc4939a8c9976edf2b7b77dcd88bda6e3919fa4c17c88f1"
+
+[build]
+system = "cmake"
+
+[install]
+keg_only = false

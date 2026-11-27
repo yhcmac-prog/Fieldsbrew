@@ -1,0 +1,15 @@
+[package]
+name = "thrive"
+version = "v1.7.0"
+description = "Thrive — 开源进化策略游戏（Revolutionary Games）"
+homepage = "https://revolutionarygamesstudio.com/"
+
+[source]
+url = "https://github.com/Revolutionary-Games/Thrive/archive/refs/tags/v1.7.0.tar.gz"
+sha256 = "fd8114b4db87c64178118e06d9a4407a33c1ff8e215aa1729152348ca3a3e062"
+
+[build]
+system = "cmake"
+
+[install]
+keg_only = true

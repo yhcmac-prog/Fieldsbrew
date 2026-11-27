@@ -1,0 +1,15 @@
+[package]
+name = "pixman"
+version = "0.43.2"
+description = "pixman — 像素操作基础库（Cairo/SDL/QEMU 依赖）"
+homepage = "https://pixman.org/"
+
+[source]
+url = "https://www.cairographics.org/releases/pixman-0.43.2.tar.gz"
+sha256 = "ea79297e5418fb528d0466e8b5b91d1be88857fa3706f49777b2925a72ae9924"
+
+[build]
+system = "autotools"
+
+[install]
+keg_only = false

@@ -12,6 +12,7 @@ mod download;
 mod formula;
 mod homebrew;
 mod link;
+mod macports;
 mod platform;
 mod sandbox;
 mod sign;
@@ -102,8 +103,8 @@ fn run() -> Result<()> {
             platform::ensure_supported()?;
             commands::linking::unlink_names(&cfg, &names)
         }
-        Command::Tap { name, url, remove } => {
-            commands::tap::run(&cfg, name.as_deref(), url.as_deref(), remove)
+        Command::Tap { name, url, remove, core } => {
+            commands::tap::run(&cfg, name.as_deref(), url.as_deref(), remove, core)
         }
         Command::Shellenv { shell } => commands::shellenv::run(&cfg, shell.as_deref()),
         Command::Convert { path, out, cask } => {
@@ -174,6 +175,21 @@ fn run() -> Result<()> {
             )
         }
         Command::Audit { names } => commands::audit::run(&cfg, &names),
+        Command::Bottle {
+            names,
+            out,
+            skip_build,
+            keep_tmp,
+            no_sandbox,
+        } => commands::bottle::run(
+            &cfg,
+            &names,
+            out.as_deref(),
+            skip_build,
+            keep_tmp,
+            no_sandbox,
+            cfg.verbose,
+        ),
         Command::Cleanup => {
             platform::ensure_supported()?;
             commands::cleanup::run(&cfg)

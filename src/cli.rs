@@ -140,6 +140,9 @@ pub enum Command {
         /// 移除指定 tap
         #[arg(long)]
         remove: bool,
+        /// 一键添加官方核心 tap（seeds-core 源码构建 + fields-core bottle 优先）
+        #[arg(long)]
+        core: bool,
     },
     /// 输出 shell 环境变量设置（可 eval 使用）
     Shellenv {
@@ -235,6 +238,23 @@ pub enum Command {
     Audit {
         /// 指定 formula；省略则审计所有 formula
         names: Vec<String>,
+    },
+    /// 把已构建的 Cellar 目录打包成 bottle tarball（Homebrew 兼容格式）
+    Bottle {
+        /// formula 名，可一次多个；需已安装或自动构建
+        names: Vec<String>,
+        /// 输出目录（默认 ./bottles）
+        #[arg(long)]
+        out: Option<PathBuf>,
+        /// 跳过自动构建（仅打包已安装版本）
+        #[arg(long)]
+        skip_build: bool,
+        /// 构建时保留临时目录
+        #[arg(long)]
+        keep_tmp: bool,
+        /// 构建时跳过 sandbox
+        #[arg(long)]
+        no_sandbox: bool,
     },
     /// 清理旧版本、悬空链接与构建临时目录
     Cleanup,

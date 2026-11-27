@@ -1,0 +1,15 @@
+[package]
+name = "ghc"
+version = "9.14.1"
+description = "Glasgow Haskell Compiler（Haskell 编译器与运行时）"
+homepage = "https://www.haskell.org/ghc/"
+
+[source]
+url = "https://downloads.haskell.org/~ghc/9.14.1/ghc-9.14.1-src.tar.xz"
+sha256 = "2a83779c9af86554a3289f2787a38d6aa83d00d136aa9f920361dd693c101e77"
+
+[build]
+system = "make"
+
+[install]
+keg_only = true
