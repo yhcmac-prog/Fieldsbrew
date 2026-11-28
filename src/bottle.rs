@@ -32,7 +32,7 @@ fn select(b: &Bottle, name: &str, current_tag: Option<&str>) -> Vec<Candidate> {
 
     if let Some(tag) = current_tag {
         if let Some(t) = b.tags.get(tag) {
-            if arch_ok(&t.arch) {
+            if arch_ok(&t.arch) && !looks_non_macos(&t.url) {
                 let c = candidate_from(
                     tag,
                     &t.url,
@@ -54,15 +54,7 @@ fn select(b: &Bottle, name: &str, current_tag: Option<&str>) -> Vec<Candidate> {
     }
 
     if arch_ok(&b.arch) {
-        let platform_ok = if b.platforms.is_empty() {
-            true
-        } else {
-            match current_tag {
-                Some(tag) => b.platforms.iter().any(|p| normalize_platform(p) == tag),
-                None => false,
-            }
-        };
-        if platform_ok {
+        if platform_ok(b, current_tag) {
             let c = candidate_from(
                 "默认",
                 &b.url,
@@ -75,11 +67,18 @@ fn select(b: &Bottle, name: &str, current_tag: Option<&str>) -> Vec<Candidate> {
                 out.push(c);
             }
         } else {
-            eprintln!(
-                "警告: {name} 的 bottle 仅适用于 {:?}，当前平台为 {}，已忽略",
-                b.platforms,
-                current_tag.unwrap_or("未知")
-            );
+            if b.platforms.is_empty() {
+                eprintln!(
+                    "警告: {name} 的 bottle 产物 `{}` 不是 macOS 平台，已忽略",
+                    b.url
+                );
+            } else {
+                eprintln!(
+                    "警告: {name} 的 bottle 仅适用于 {:?}，当前平台为 {}，已忽略",
+                    b.platforms,
+                    current_tag.unwrap_or("未知")
+                );
+            }
         }
     } else {
         eprintln!(
@@ -129,6 +128,33 @@ fn arch_ok(arch: &str) -> bool {
 
 fn normalize_platform(p: &str) -> String {
     p.trim().to_ascii_lowercase().replace('-', "_")
+}
+
+/// bottle 产物是否明显不是 macOS（文件名/路径里带 linux/freebsd/windows 之类标记）。
+/// Intel Mac 只能安装 x86_64 macOS 产物；只凭 arch 字段无法区分 Linux 与 macOS，
+/// 因此平台标签缺省时用产物路径兜底排除。
+fn looks_non_macos(url: &str) -> bool {
+    let u = url.trim().to_ascii_lowercase();
+    [
+        "linux", "freebsd", "openbsd", "netbsd", "windows", "_win", ".dll", ".exe",
+    ]
+    .iter()
+    .any(|m| u.contains(m))
+}
+
+/// 平台校验：显式 platforms 必须命中当前 macOS 标签；platforms 缺省时拒绝
+/// 路径里带非 macOS 标记的产物。返回 false 表示该 bottle 不该在 Intel Mac 上安装。
+fn platform_ok(b: &Bottle, current_tag: Option<&str>) -> bool {
+    if b.platforms.is_empty() {
+        return !looks_non_macos(&b.url);
+    }
+    match current_tag {
+        Some(tag) => b
+            .platforms
+            .iter()
+            .any(|p| normalize_platform(p) == tag),
+        None => false,
+    }
 }
 
 /// 按候选顺序下载并落盘 bottle。返回 false 表示没有可用 bottle 或全部失败，
@@ -648,5 +674,37 @@ platforms = ["catalina", "big-sur"]
         std::fs::write(&data_path, b"tampered").unwrap();
         assert!(verify_signature(&data_path, &sig_path, &pk).is_err());
         std::fs::remove_dir_all(&dir).ok();
+    }
+
+    fn bottle_with(url: &str, platforms: &[&str]) -> Bottle {
+        Bottle {
+            url: url.to_string(),
+            platforms: platforms.iter().map(|s| s.to_string()).collect(),
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn test_reject_non_macos_bottle() {
+        let b = bottle_with(
+            "https://example.com/xz%405.8.4.x86_64_linux.bottled.tar.gz",
+            &[],
+        );
+        assert!(looks_non_macos(&b.url));
+        assert!(!platform_ok(&b, Some("sonoma")));
+    }
+
+    #[test]
+    fn test_accept_macos_bottle_without_tag() {
+        let b = bottle_with("https://example.com/hello-2.12.1.sonoma.bottle.tar.gz", &[]);
+        assert!(!looks_non_macos(&b.url));
+        assert!(platform_ok(&b, Some("sonoma")));
+    }
+
+    #[test]
+    fn test_explicit_platform_must_match() {
+        let b = bottle_with("https://example.com/hello.bottle.tar.gz", &["ventura"]);
+        assert!(!platform_ok(&b, Some("sonoma")));
+        assert!(platform_ok(&b, Some("ventura")));
     }
 }
