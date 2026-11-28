@@ -175,9 +175,8 @@ fn one(
     })
 }
 
-/// Homebrew bottle 里用的 macOS 标签。我们只关心 Intel。
+/// fb bottle 打包用的 macOS 平台标签。自动检测当前系统版本（sonoma / tahoe 等），
+/// 让 Homebrew 兼容的 bottle URL 被 `looks_non_macos` 放过。
 fn current_os_tag() -> &'static str {
-    // 简化：统一用 x86_64_linux（Fieldsbrew 跨 macOS 版本兼容）
-    // 如果想精确，可用 sw_vers 查 macOS 版本然后映射
-    "x86_64_linux"
+    crate::platform::macos_tag().unwrap_or("x86_64")
 }
