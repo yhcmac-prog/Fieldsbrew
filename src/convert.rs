@@ -454,7 +454,15 @@ fn convert_formula(src: &str, file_stem: &str) -> Result<Converted> {
         } else if t.starts_with("mirror ") {
             warnings.push("源码 mirror 暂不支持，已忽略".to_string());
         } else if t.starts_with("depends_on") {
-            if let Some(dep) = parse_dependency(t) {
+            // `depends_on :xcode => ["16.0", :build]` 这类符号依赖描述的是宿主工具链
+            // 或系统版本，不是可安装的 formula。take_string 会抓到 `=>` 后面的第一个
+            // 字符串，直接把版本号当成包名，因此这里必须先拦下来。
+            if t["depends_on".len()..].trim_start().starts_with(':') {
+                match symbol_name(&t["depends_on".len()..]) {
+                    Some(sym) => warnings.push(format!("depends_on :{sym} 为系统/工具链依赖，未转换")),
+                    None => warnings.push("depends_on 的符号依赖未转换".to_string()),
+                }
+            } else if let Some(dep) = parse_dependency(t) {
                 let dep_name = dep
                     .split_whitespace()
                     .next()
